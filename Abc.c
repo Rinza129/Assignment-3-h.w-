@@ -1,47 +1,71 @@
 #include <stdio.h>
 
+#define STUDENTS 3
+#define SUBJECTS 3
+
+// Function declarations
+
+float calculateAverage(int marks[]);
+char calculateGrade(float avg);
+void displayResult(char name[], int marks[]);
+void findTopper(char names[][10], int marks[STUDENTS][SUBJECTS]);
+
 int main() {
-    int marks[3][3] = {
+    int marks[STUDENTS][SUBJECTS] = {
         {50, 60, 70},
         {80, 90, 100},
         {30, 40, 50}
     };
-    char names[3][10] = {"Ali", "Bob", "Cat"};
-    int i, j, sum;
-    float avg;
 
-    for (i = 0; i < 3; i++) {
-        sum = 0;
-        for (j = 0; j < 3; j++) {
-            sum += a[i][j];
-        }
+    char names[STUDENTS][10] = {"Ali", "Bob", "Cat"};
 
-        avg = sum / 3.0;
-
-        if (avg >= 80)
-            printf("%s Grade A avg=%.2f\n", names[i], avg);
-        else if (avg >= 60)
-            printf("%s Grade B avg=%.2f\n", names[i], avg);
-        else if (avg >= 40)
-            printf("%s Grade C avg=%.2f\n", names[i], avg);
-        else
-            printf("%s Fail avg=%.2f\n", names[i], avg);
+    for (int i = 0; i < STUDENTS; i++) {
+        displayResult(names[i], marks[i]);
     }
 
+    findTopper(names, marks);
+
+    return 0;
+}
+
+float calculateAverage(int marks[]) {
+    int sum = 0;
+    for (int i = 0; i < SUBJECTS; i++) {
+        sum += marks[i];
+    }
+    return sum / (float) SUBJECTS;
+}
+
+char calculateGrade(float avg) {
+    if (avg >= 80) return 'A';
+    else if (avg >= 60) return 'B';
+    else if (avg >= 40) return 'C';
+    else return 'F';
+}
+
+void displayResult(char name[], int marks[]) {
+    float avg = calculateAverage(marks);
+    char grade = calculateGrade(avg);
+
+    if (grade == 'F')
+        printf("%s: Fail | Average = %.2f\n", name, avg);
+    else
+        printf("%s: Grade %c | Average = %.2f\n", name, grade, avg);
+}
+
+void findTopper(char names[][10], int marks[STUDENTS][SUBJECTS]) {
     int maxTotal = 0, topperIndex = 0;
 
-    for (i = 0; i < 3; i++) {
-        sum = 0;
-        for (j = 0; j < 3; j++) {
-            sum += a[i][j];
+    for (int i = 0; i < STUDENTS; i++) {
+        int total = 0;
+        for (int j = 0; j < SUBJECTS; j++) {
+            total += marks[i][j];
         }
-        if (sum > maxTotal) {
-            maxTotal = sum;
+        if (total > maxTotal) {
+            maxTotal = total;
             topperIndex = i;
         }
     }
 
-    printf("Topper: %s with total %d\n", names[topperIndex], maxTotal);
-
-    return 0;
+    printf("\nTopper: %s with total marks = %d\n", names[topperIndex], maxTotal);
 }
